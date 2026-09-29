@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Download and verify the approved model bundle
         run: |
-          curl --fail --location --retry 3 --max-time 900 'https://equally-laws-towards-knight.trycloudflare.com/dxa-runtime.tar.gz' -o dxa-runtime.tar.gz
+          curl --fail --location --retry 3 --retry-all-errors --connect-timeout 15 --max-time 900 'https://larjz-5-180-97-242.free.pinggy.net/dxa-runtime.tar.gz' -o dxa-runtime.tar.gz
           echo '75610644fe4c59c04414fda9420c87f039cb23548fa7198d0b9215cf350aef3f  dxa-runtime.tar.gz' > SHA256SUMS
           sha256sum --check SHA256SUMS
       - name: Publish model weights
