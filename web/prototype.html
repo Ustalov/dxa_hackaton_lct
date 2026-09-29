@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DXA — контроль качества</title>
+<style>
+:root{font-family:Inter,system-ui,sans-serif;color:#203641;background:#f3f6f7;font-synthesis:none}*{box-sizing:border-box}body{margin:0}main{max-width:1160px;margin:auto;padding:30px 24px}h1{font-size:27px;font-weight:650;margin:0 0 6px}.subtitle{color:#647d89;margin:0 0 25px}.upload{border:1.5px dashed #8daab4;border-radius:14px;background:#fff;text-align:center;padding:26px 16px;margin-bottom:24px}.upload.drag{background:#e5f5f2;border-color:#198579}.upload p{margin:6px;color:#647d89;font-size:14px}button{border:0;border-radius:9px;background:#167d73;color:white;padding:12px 22px;font:inherit;font-weight:600;cursor:pointer}button:disabled{opacity:.5;cursor:wait}button:focus-visible{outline:3px solid #53b5eb;outline-offset:3px}#status{margin-top:12px;color:#326a66;min-height:20px}#error{color:#a43337;white-space:pre-wrap}#error:empty{display:none}.case{background:white;border:1px solid #dfe7eb;border-radius:14px;padding:20px;margin:20px 0}.case h2{font-size:18px;margin:0}.filename{color:#70828b;font-size:13px;margin:5px 0 16px;overflow-wrap:anywhere}.pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}.pair figure{margin:0;min-width:0}.pair figcaption{font-size:13px;font-weight:550;color:#687f89;margin-bottom:8px}.imagebox{background:#111a20;border-radius:9px;overflow:hidden;display:flex;justify-content:center;align-items:center;min-height:120px}.imagebox img{display:block;width:100%;height:auto;max-height:620px;object-fit:contain;aspect-ratio:var(--aspect);image-rendering:auto}.placeholder{padding:30px;color:#b4c1c7}.result{margin-top:18px;border-top:1px solid #e5ebee;padding-top:16px}.result h3{font-size:16px;margin:0 0 10px}.badge{display:inline-block;border-radius:6px;padding:5px 10px;font-size:14px;font-weight:600;background:#e4f4ee;color:#226a4f}.badge.bad{background:#fff0e7;color:#a04423}.badge.review{background:#fff6d9;color:#896713}.checks{display:grid;gap:8px;margin:14px 0 0;padding:0;list-style:none}.check{display:flex;justify-content:space-between;gap:18px;font-size:14px}.check span:last-child{text-align:right;white-space:nowrap}.badtext{color:#b14d29}.reviewtext{color:#96731d}.measurements{color:#677d86;font-size:13px;line-height:1.7;margin:12px 0 0}.notice{color:#96731d;font-size:14px;margin:10px 0 0}.empty{color:#70838c;text-align:center;padding:25px}@media(max-width:650px){main{padding:20px 12px}.case{padding:13px}.pair{gap:8px}.check{font-size:13px;gap:10px}h1{font-size:23px}.imagebox img{max-height:450px}}
+</style><style>
+.spacing{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 20px}.spacing label{display:flex;align-items:center;gap:7px;font-size:14px}.spacing input{width:92px;padding:8px;border:1px solid #b5c7cf;border-radius:7px;font:inherit;background:white}.spacing small{flex-basis:100%;color:#687f89;font-size:12px}.legend{font-size:13px;color:#546c77;display:flex;gap:8px 22px;flex-wrap:wrap;margin:12px 0}.legend span{display:flex;gap:7px;align-items:center}.swatch{display:inline-block;width:12px;height:12px;border-radius:3px;flex-shrink:0}.check{display:block;padding:9px 0}.check-title{display:flex;justify-content:space-between;gap:16px}.criterion-note{font-size:12px;color:#647b86;margin:5px 0}.scale{display:flex;height:10px;background:#158b63;border-radius:5px;overflow:hidden;width:100%;max-width:400px;margin-top:8px}.scale-green{background:#158b63}.scale-red{background:#d94749}.scale-note{font-size:12px;color:#71858d;margin:10px 0 0}.reviewtext,.notice{color:#687f89}.badge.review{background:#edf0f2;color:#546775}.badge.bad{background:#fdebea;color:#ac3036}.badtext{color:#ac3036}.rotation{margin:7px 0;font-size:13px;color:#536d78}
+</style><style>
+.imagebox{--image-limit:620px}
+.downloads{display:flex;gap:12px 24px;flex-wrap:wrap;margin:0 0 20px;padding:14px 18px;background:white;border:1px solid #dce6ea;border-radius:10px}.downloads a{color:#167d73;font-weight:600}.downloads span{color:#647b86;overflow-wrap:anywhere}
+.check-answer{margin-left:auto;flex:0 0 auto;max-width:48%;text-align:right}
+.check-answer>span{white-space:normal!important}
+.check-answer .heuristic-confidence{margin:4px 0 0}
+.result h3{font-size:21px}
+.result .badge{font-size:17px;padding:7px 12px}
+.result .check{font-size:18px;line-height:1.45;padding:14px;border:1px solid transparent;border-radius:10px}
+.check-title>span{min-width:0;font-weight:550}
+.result .criterion-note,.result .rotation,.result .measurements,.result .notice{font-size:15px;line-height:1.5}
+.result .check.violation{color:#ac3036;background:rgba(217,71,73,.08);border-color:rgba(217,71,73,.32)}
+.result .check.violation .criterion-note,.result .check.violation .rotation{color:#a33a40}
+@media(max-width:650px){.result .check{font-size:16px;padding:11px}.check-title{gap:10px}.result .criterion-note,.result .rotation,.result .measurements,.result .notice{font-size:14px}}
+.imagebox img.physical-spacing{width:min(100%,calc(var(--image-limit)*var(--physical-aspect)));height:auto;max-height:none;aspect-ratio:var(--physical-aspect);object-fit:fill}
+@media(max-width:650px){.imagebox{--image-limit:450px}}
+</style></head><body><main>
+<h1>Контроль качества денситометрии</h1><p class="subtitle">Поясничный отдел позвоночника и проксимальный отдел бедра</p>
+<p class="privacy-note"><strong>Загружайте только анонимизированные данные.</strong></p>
+<section class="spacing" aria-label="Размер пикселя">
+<strong>Pixel Spacing</strong>
+<label for="spacing-x">X <input id="spacing-x" type="number" min="0.01" max="10" step="any" value="0.6" required> мм/пиксель</label>
+<label for="spacing-y">Y <input id="spacing-y" type="number" min="0.01" max="10" step="any" value="1.05" required> мм/пиксель</label>
+<small>Для загружаемых изображений. По умолчанию — значения организаторов. Угол оси позвоночника определяется по изображению, без поправки на размер пикселя.</small>
+</section>
+<section class="upload" id="drop" aria-label="Загрузка исследований">
+<input id="files" type="file" accept=".dcm,.dicom,.zip,.png,.jpg,.jpeg" multiple hidden>
+<button id="choose" type="button">Загрузить изображения</button>
+<p>Или перетащите файлы сюда · DICOM, ZIP, PNG, JPEG</p>
+<div id="status" role="status" aria-live="polite"></div><div id="error" role="alert"></div>
+</section>
+<div id="results"><p class="empty">Загрузите исследование — исходник, разметка и результат появятся здесь.</p></div>
+</main><script>
+'use strict';
+const $=s=>document.querySelector(s);let busy=false,started=false;
+const names={spine_position:'Некорректная укладка',spine_axis:'Не выровнена ось позвоночника',spine_artifact:'Присутствуют посторонние предметы',hip_position:'Некорректная укладка',hip_roi:'Некорректная область интереса'};
+function el(tag,text,cls){const x=document.createElement(tag);if(text!==undefined)x.textContent=text;if(cls)x.className=cls;return x}
+async function api(url,options){const r=await fetch(url,options);if(!r.ok){const d=await r.json().catch(()=>({}));throw Error(typeof d.detail==='string'?d.detail:`Ошибка сервиса (${r.status})`)}return r.json()}
+const fmt=x=>Number.isFinite(x)?x.toFixed(1):'—';
+// Display-only heuristic. Widths below are chosen scales, not fitted error estimates.
+function heuristicConfidence(key,value,g,forced=false){
+ if(forced||typeof value!=='boolean')return null;
+ const finite=Number.isFinite;let score=null;
+ if(key==='hip_roi'){
+  const specs=[['greater_trochanter_top',30],['ischium_bottom',30],['femur_lateral_margin',20]];
+  const values=specs.map(([k,t])=>finite(g.margins?.[k]?.value)?(t-g.margins[k].value)/10:null);
+  if(values.every(finite))score=Math.max(...values);
+ }
+ if(key==='hip_position'){
+  const t=g.trochanter;
+  if(finite(t?.center_halfwidth)&&finite(t?.depth_mm))score=Math.max((.70-t.center_halfwidth)/.14,(t.depth_mm-5.25)/2);
+ }
+ if(key==='spine_axis'&&finite(g.axis?.value))score=(Math.abs(g.axis.value)-5)/3;
+ if(key==='spine_position'){
+  const t=g.top_field,l=g.iliac?.L,r=g.iliac?.R;
+  if(t?.numbering_inconsistent)return null;
+  const top=[t?.t12_height_mm,t?.l1_top_margin_mm].filter(finite);
+  if(t?.threshold_mm===15&&typeof t.violation==='boolean'&&top.length&&finite(l?.area_mm2)&&finite(r?.area_mm2)){
+   score=Math.max((15-Math.max(...top))/5,(50-l.area_mm2)/50,(50-r.area_mm2)/50);
+  }
+ }
+ if(key==='spine_artifact'&&finite(g.foreign?.score)&&finite(g.foreign?.threshold))score=(g.foreign.score-g.foreign.threshold)/2;
+ if(!finite(score))return null;
+ // Confidence refers to the displayed answer (normal OR violation), never feeds decisions.
+ const support=(value?1:-1)*score;
+ if(support < -1e-6)return null;
+ return Math.round(50+45*Math.tanh(Math.max(0,support)));
+}
+function roiDirections(g){
+ return [['femur_lateral_margin','латеральное'],['greater_trochanter_top','смещение вверх'],['ischium_bottom','смещение вниз']].filter(([k])=>g.margins?.[k]?.passes===false).map(([,name])=>name);
+}
+function rotationDirections(g){
+ const t=g.trochanter;if(!Number.isFinite(t?.center_halfwidth)||!Number.isFinite(t?.depth_mm))return [];
+ const directions=[];
+ if(t.center_halfwidth<.7)directions.push('избыточная внутренняя ротация');
+ if(t.depth_mm>5.25)directions.push('избыточная наружная ротация');
+ return directions;
+}
+function render(data,base,append=false,batchName='Результаты обработки'){
+ if(!append)$('#results').replaceChildren();
+ if(base.startsWith('/api/jobs/')){
+  const downloads=el('nav',undefined,'downloads');downloads.setAttribute('aria-label','Скачать результаты');
+  downloads.append(el('span',batchName));
+  [['Скачать XLSX','report.xlsx'],['Скачать ZIP разметок','annotations.zip']].forEach(([label,file])=>{
+   const link=el('a',label);link.href=`${base}/${file}`;link.download=file;downloads.append(link);
+  });$('#results').append(downloads);
+ }
+ data.rows.forEach((row,i)=>{
+  const d=data.details[i],g=d.geometry||{},c=el('article',undefined,'case');
+  c.append(el('h2',row.anatomical_region||'Исследование'),el('p',d.file||row.path_to_study,'filename'));
+  const pair=el('div',undefined,'pair');
+  [['Исходное изображение','images',d.has_image],['С разметкой','overlays',d.has_overlay]].forEach(([label,kind,available])=>{
+   const fig=el('figure'),box=el('div',undefined,'imagebox');fig.append(el('figcaption',label));
+   if(available){
+    const img=el('img');img.src=`${base}/${kind}/${i}.png`;img.alt=label;img.loading='lazy';
+    const sh=d.metadata?.shape,spacing=d.metadata?.spacing;
+    if(sh)img.style.setProperty('--aspect',`${sh[1]} / ${sh[0]}`);
+    if(d.metadata?.region==='hip'&&sh&&spacing?.length===2&&spacing.every(v=>Number.isFinite(v)&&v>0)){
+     img.classList.add('physical-spacing');
+     img.style.setProperty('--physical-aspect',(sh[1]*spacing[1])/(sh[0]*spacing[0]));
+    }
+    box.append(img);
+   }
+   else box.append(el('span',kind==='images'?'Не удалось прочитать изображение':'Разметка недоступна','placeholder'));
+   fig.append(box);pair.append(fig);
+  });c.append(pair);
+  if(d.metadata?.region==='hip'){
+   const legend=el('div',undefined,'legend');
+   [['#00a4ff','Синий — верхний отступ 30 мм'],['#a464ff','Фиолетовый — нижний отступ 30 мм'],['#00d2af','Бирюзовый — латеральный отступ 20 мм'],['#ff5a64','Красный — малый вертел'],['#ffd741','Жёлтый — выступающая за контуры диафиза часть малого вертела']].forEach(([color,label])=>{const item=el('span'),swatch=el('i',undefined,'swatch');swatch.style.background=color;item.append(swatch,document.createTextNode(label));legend.append(item)});c.append(legend);
+  }
+  const res=el('section',undefined,'result');res.append(el('h3','Результат'));
+  const state=d.display_state||'review';res.append(el('span',state==='violation'?'Есть нарушение':state==='normal'?'Качественное исследование':'Требуется проверка','badge '+(state==='violation'?'bad':state==='review'?'review':'')));
+  const ul=el('ul',undefined,'checks');Object.entries(d.task_decisions||{}).forEach(([key,v])=>{
+   const li=el('li',undefined,v===true?'check violation':'check'),title=el('div',undefined,'check-title');
+   let label=names[key]||key;const directions=key==='hip_roi'?roiDirections(g):key==='hip_position'&&v===true?rotationDirections(g):[];
+   if(directions.length)label+=' ('+directions.join(', ')+')';
+   const forced=(d.forced_violation_tasks||[]).includes(key);
+   const answer=el('div',undefined,'check-answer');
+   answer.append(el('span',forced?'Нарушение — оценка недоступна':v===null?'Не оценено':v?'Выявлено':'Не выявлено',v===null?'reviewtext':v?'badtext':''));
+   title.append(el('span',label),answer);li.append(title);
+   if(key==='hip_position'){
+    const a=g.trochanter?.rotation_degrees;
+    if(Number.isFinite(a)){
+     li.append(el('p',`Приблизительная ротация относительно положения шейки параллельно детектору: ${fmt(Math.abs(a))}° ${a>0?'наружу':a<0?'внутрь':''}`,'rotation'));
+    }
+   }
+   if(key==='hip_roi')li.append(el('p','Отступы: сверху ≥ 30 мм, снизу ≥ 30 мм, латерально ≥ 20 мм.','criterion-note'));
+   if(key==='spine_axis')li.append(el('p',`Угол: ${fmt(g.axis?.value)}° (норма ≤ 5°)`,'criterion-note'));
+   if(key==='spine_artifact')li.append(el('p','Сила сигнала детектора посторонних предметов','criterion-note'));
+   const confidence=heuristicConfidence(key,v,g,forced);
+   const confidenceNote=el('p',confidence===null?'Вероятность: не определена':`Вероятность: ${confidence}%`,'criterion-note heuristic-confidence');
+   confidenceNote.title='Условная оценка по расстоянию до порогов. Не откалибрована по частоте правильных ответов и не влияет на решение.';
+   answer.append(confidenceNote);
+   ul.append(li);
+  });res.append(ul);
+  const lines=[];
+  if(g.margins)lines.push('Измеренные отступы: '+[['greater_trochanter_top','сверху'],['ischium_bottom','снизу'],['femur_lateral_margin','латерально']].map(([key,label])=>`${label} — ${Number.isFinite(g.margins[key]?.value)?fmt(g.margins[key].value)+' мм':'не определён'}`).join(', '));
+  if(g.axis?.value!=null)lines.push(`Отклонение оси: ${fmt(g.axis.value)}°${g.axis.estimated?' (оценочно)':''}`);
+  if(g.iliac)lines.push(`Подвздошные кости: ${g.iliac.L.present&&g.iliac.R.present?'видны с обеих сторон':!g.iliac.L.present&&!g.iliac.R.present?'не определены с обеих сторон':'определена только одна'}`);
+  if(g.trochanter){const t=g.trochanter;if(t.center_halfwidth!=null&&t.center_halfwidth<.7)lines.push('Малый вертел смещён за диафиз');lines.push(Number.isFinite(t.depth_mm)&&Number.isFinite(t.length_mm)?`Выступ малого вертела: ${fmt(t.depth_mm)} × ${fmt(t.length_mm)} мм`:'Выступ малого вертела: не определён')}
+  if(lines.length)res.append(el('p',lines.join(' · '),'measurements'));
+  if(d.metadata?.spacing)res.append(el('p',`Размер пикселя: X = ${d.metadata.spacing[1]}, Y = ${d.metadata.spacing[0]} мм.`,'measurements'));
+  if(d.error)res.append(el('p',d.error,'notice'));
+  c.append(res);$('#results').append(c);
+ });
+}
+async function upload(files){
+ if(busy||!files.length)return;
+ const sx=$('#spacing-x').valueAsNumber,sy=$('#spacing-y').valueAsNumber;
+ if(![sx,sy].every(x=>Number.isFinite(x)&&x>=.01&&x<=10)){$('#error').textContent='Укажите Pixel Spacing от 0,01 до 10 мм/пиксель по каждой оси.';return}
+ busy=true;started=true;$('#choose').disabled=true;$('#spacing-x').disabled=true;$('#spacing-y').disabled=true;$('#error').textContent='';$('#results').replaceChildren();let rendered=false,errors=[];
+ try{for(let n=0;n<files.length;n++){
+  const f=files[n],name=f.name.toLowerCase();const kind=name.endsWith('.zip')?'zip':name.endsWith('.png')?'png':/\.jpe?g$/.test(name)?'jpg':'dicom';
+  try{
+   $('#status').textContent=`Загрузка ${n+1} / ${files.length}: ${f.name}`;
+   const job=await api(`/api/jobs?kind=${kind}&filename=${encodeURIComponent(f.name)}&spacing_x=${sx}&spacing_y=${sy}`,{method:'POST',headers:{'Content-Type':'application/octet-stream'},body:f});
+   for(;;){await new Promise(resolve=>setTimeout(resolve,900));const s=await api(`/api/jobs/${job.job_id}`);if(s.state==='failed')throw Error(s.error);if(s.state==='complete')break;$('#status').textContent=`${f.name} · ${s.state==='queued'?'Ожидание':s.total?`Обработано ${s.done} из ${s.total}`:'Анализ изображения…'}`}
+   render(await api(`/api/jobs/${job.job_id}/results`),`/api/jobs/${job.job_id}`,rendered,f.name);rendered=true;
+  }catch(e){errors.push(`${f.name}: ${e.message}`);$('#error').textContent=errors.join('\n')}
+ }$('#status').textContent=errors.length?'Обработка завершена с ошибками':'Обработка завершена';}
+ finally{busy=false;$('#choose').disabled=false;$('#spacing-x').disabled=false;$('#spacing-y').disabled=false;$('#files').value=''}
+}
+$('#choose').onclick=()=>$('#files').click();$('#files').onchange=()=>upload(Array.from($('#files').files));
+$('#drop').ondragover=e=>{e.preventDefault();$('#drop').classList.add('drag')};$('#drop').ondragleave=()=>$('#drop').classList.remove('drag');$('#drop').ondrop=e=>{e.preventDefault();$('#drop').classList.remove('drag');upload(Array.from(e.dataTransfer.files))};
+</script></body></html>

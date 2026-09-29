@@ -1,0 +1,10 @@
+{
+  "container": "imagelab-dxa:final",
+  "api": true,
+  "auth": true,
+  "zip_input": true,
+  "xlsx_download": true,
+  "annotations_download": true,
+  "invalid_file_isolated": true,
+  "valid_images": 2
+}

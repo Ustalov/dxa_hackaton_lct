@@ -1,0 +1,62 @@
+[
+  {
+    "path": "app/artifacts/model.joblib",
+    "bytes": 652,
+    "sha256": "ddc372d8835fdffbe29bb2d506af342b784208ff5ba054208449868447c2cb5e"
+  },
+  {
+    "path": "app/artifacts/png_full_v8/hip/best.pt",
+    "bytes": 54410172,
+    "sha256": "d738b53bfcf2b6668f6f3778b2579d7ffdac75e0021acf530b32e234724bbe7d"
+  },
+  {
+    "path": "app/artifacts/png_full_v8/spine/best.pt",
+    "bytes": 54351908,
+    "sha256": "e70686b23ca4a1293d283f9dfe2d6ceb7074a14edd4072e3e6a443ff06007b14"
+  },
+  {
+    "path": "data/dxa-ct-synth/model/region_cls/region_cls.pt",
+    "bytes": 44791416,
+    "sha256": "5564daf56d92a42aefebc647dc716af6edd7639adac74f6ca954443410d02856"
+  },
+  {
+    "path": "data/dxa-ct-synth/model/region_cls/info.json",
+    "bytes": 261,
+    "sha256": "de7db7fd779899cfdcc681cc9b886e32f274abcfcecb77a91907a9bef6378666"
+  },
+  {
+    "path": "data/dxa-ct-synth/model/v4/best.pt",
+    "bytes": 97884398,
+    "sha256": "836af3f8f96cd1b390d48d006bd014af671f0665f0fde3184608db5b5e7007b3"
+  },
+  {
+    "path": "data/dxa-ct-synth/model/spine_v1/best.pt",
+    "bytes": 97895406,
+    "sha256": "40dd3b5d45cbe71404e999f34b0b49e0520e4861ec8367576596675a5324bade"
+  },
+  {
+    "path": "data/dxa-ct-synth/model/spine_v1/split.json",
+    "bytes": 365,
+    "sha256": "f47a580ba28ccaf215ba32b99c53883de319b10750d7445a9c2af8085f15b6dc"
+  },
+  {
+    "path": "data/dxa-three-stage/stage3/best.pt",
+    "bytes": 96973984,
+    "sha256": "c389ae1c4dbcb03eac82846b6a41d86e72d89d3fc4c7f3e73a670c7851ced0f9"
+  },
+  {
+    "path": "data/dxa-foreign-model-v3/best.pt",
+    "bytes": 45486354,
+    "sha256": "b361f632a2521b3289fcdd674c6c36f9c1fd0624c129095f3d775e39f18d56ad"
+  },
+  {
+    "path": "data/dxa-foreign-threshold-audit-v1/policy_validation_f1.json",
+    "bytes": 1098,
+    "sha256": "27ae6c0516779ce44e05b24ca80c53a61d6c361450e83071c349a2f6c9b3ac0b"
+  },
+  {
+    "path": "data/dxa-explicit-rules-v2/config.json",
+    "bytes": 2892,
+    "sha256": "f97069064c4dc9f5e88924240395a7de6508c3ad3e21eeaedf626cfb021061f2"
+  }
+]

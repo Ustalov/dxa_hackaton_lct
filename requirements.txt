@@ -1,0 +1,14 @@
+numpy==1.26.4
+scipy==1.15.3
+pandas==2.2.3
+pydicom==3.0.2
+scikit-learn==1.7.2
+scikit-image==0.25.2
+opencv-python-headless==4.11.0.86
+fastapi==0.136.1
+uvicorn==0.46.0
+openpyxl==3.1.5
+Pillow==12.2.0
+httpx==0.28.1
+joblib==1.5.3
+threadpoolctl==3.6.0
