@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+.runtime/
+runtime-data/
+jobs/
+annotation_projects/
+config/prototype-auth.json
+*.dcm
+*.pt
+*.joblib
+*.log
